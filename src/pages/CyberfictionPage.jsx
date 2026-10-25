@@ -23,7 +23,6 @@ import "./CyberfictionPage.css";
 export default function CyberfictionPage() {
   const navigate = useNavigate();
   const previewCanvasRef = useRef(null);
-  const [currentFrame, setCurrentFrame] = useState(1);
   const { openModal: openSearch } = useSearch();
 
   // Load website components data
@@ -73,20 +72,12 @@ export default function CyberfictionPage() {
       };
     };
 
-    renderPreviewFrame(currentFrame);
+    renderPreviewFrame(1);
 
     return () => {
       isMounted = false;
     };
-  }, [currentFrame]);
-
-  const handleCardMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const pct = Math.max(0, Math.min(1, x / rect.width));
-    const targetFrame = Math.max(1, Math.min(300, Math.round(pct * 299) + 1));
-    setCurrentFrame(targetFrame);
-  };
+  }, []);
 
   return (
     <div className="cyberfiction-page">
@@ -167,16 +158,12 @@ export default function CyberfictionPage() {
               </div>
             </div>
 
-            {/* Interactive Preview Canvas */}
-            <div
-              className="cyber-first-page-preview"
-              onMouseMove={handleCardMouseMove}
-              title="Move your mouse across horizontally to scrub preview"
-            >
+            {/* First Page 3D Avatar Preview Canvas */}
+            <div className="cyber-first-page-preview">
               <canvas ref={previewCanvasRef} className="cyber-preview-canvas-el" />
               <div className="cyber-preview-overlay">
                 <div className="cyber-preview-hud">
-                  FRAME {String(currentFrame).padStart(3, "0")} / 300 · HOVER TO SCRUB
+                  300 PHOTOS · AVATAR GENESIS
                 </div>
                 <div className="cyber-preview-btn-badge">
                   <span>CLICK TO OPEN FULL SCROLL →</span>
