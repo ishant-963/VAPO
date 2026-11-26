@@ -207,18 +207,28 @@ export default function MediaDetailPage() {
             </section>
           )}
 
-          {/* External Links */}
+          {/* External / Internal Links */}
           {media.externalUrl && (
             <div className="pt-4">
-              <a
-                href={media.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 hover:text-amber-800 hover:underline"
-              >
-                <span>Official Database / Publisher Record</span>
-                <ExternalLink size={13} />
-              </a>
+              {media.externalUrl.startsWith("/") ? (
+                <Link
+                  to={media.externalUrl}
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 hover:text-amber-800 hover:underline"
+                >
+                  <span>Open Interactive Experience</span>
+                  <ArrowRight size={13} />
+                </Link>
+              ) : (
+                <a
+                  href={media.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 hover:text-amber-800 hover:underline"
+                >
+                  <span>Official Database / Publisher Record</span>
+                  <ExternalLink size={13} />
+                </a>
+              )}
             </div>
           )}
         </main>

@@ -118,9 +118,9 @@ export default function LibraryPage() {
           {filteredItems.map((item) => (
             <div key={item.id} className="library-item-card">
               <Link to={getItemUrl(item)} className="library-item-thumb-box">
-                {item.coverImage ? (
+                {item.portrait || item.coverImage || item.image ? (
                   <img
-                    src={item.coverImage}
+                    src={item.portrait || item.coverImage || item.image}
                     alt={item.title}
                     className="library-item-thumb"
                     referrerPolicy="no-referrer"

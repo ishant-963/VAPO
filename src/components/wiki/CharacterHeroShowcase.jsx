@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Image as ImageIcon } from "../common/icons.jsx";
 import "./CharacterHeroShowcase.css";
 
+// Helper to reliably resolve static asset paths against Vite's base URL (e.g. /VAPO/)
+const resolveAssetUrl = (path) => {
+  if (!path) return null;
+  if (/^(https?:)?\/\//i.test(path) || path.startsWith("blob:") || path.startsWith("data:")) {
+    return path;
+  }
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  const base = import.meta.env.BASE_URL || "/";
+  return base.endsWith("/") ? `${base}${cleanPath}` : `${base}/${cleanPath}`;
+};
+
 export default function CharacterHeroShowcase({ character }) {
   const localModel = character?.localModel || null;
+  const modelUrl = resolveAssetUrl(localModel);
+  const modelConfig = character?.modelConfig || {};
   const pictureSlides = character?.slides || [];
 
   // Default to 3D if local model exists, otherwise gallery
   const [activeMode, setActiveMode] = useState(localModel ? "3d" : "gallery");
   const [autoRotate, setAutoRotate] = useState(true);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+
+  // Sync mode and slide index whenever character changes
+  useEffect(() => {
+    setActiveMode(localModel ? "3d" : "gallery");
+    setActiveSlideIndex(0);
+  }, [character?.id, localModel]);
 
   if (!character) return null;
   if (!localModel && pictureSlides.length === 0) return null;
@@ -78,12 +97,19 @@ export default function CharacterHeroShowcase({ character }) {
           <div className="showcase-standalone-3d">
             {/* eslint-disable-next-line react/no-unknown-property */}
             <model-viewer
-              src={localModel}
+              src={modelUrl}
               alt={`${character.name} 3D model`}
               auto-rotate={autoRotate ? "" : undefined}
               rotation-per-second="25deg"
               camera-controls
-              disable-zoom
+              camera-orbit={modelConfig.cameraOrbit || undefined}
+              camera-target={modelConfig.cameraTarget || undefined}
+              field-of-view={modelConfig.fieldOfView || undefined}
+              min-camera-orbit={modelConfig.minCameraOrbit || undefined}
+              max-camera-orbit={modelConfig.maxCameraOrbit || undefined}
+              autoplay={modelConfig.autoplay ? "" : undefined}
+              animation-name={modelConfig.animationName || undefined}
+              scale={modelConfig.scale || undefined}
               touch-action="pan-y"
               shadow-intensity="1.5"
               exposure="1.05"
@@ -101,7 +127,7 @@ export default function CharacterHeroShowcase({ character }) {
             <div className="showcase-standalone-hint">
               <Box size={14} className="text-amber-400" />
               <span className="font-semibold">{character.name}</span>
-              <span className="text-stone-400 text-xs">· Interactive 3D Model · Drag to rotate · Smooth Page Scrolling</span>
+              <span className="text-stone-400 text-xs">· Interactive 3D Model · Drag to rotate · Scroll to zoom</span>
             </div>
           </div>
         ) : (

@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ishant-963.github.io/VAPO",
+  "homepage": "https://ishant-963.github.io/fandomverse",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --emptyOutDir false",
     "lint": "oxlint",
     "preview": "vite preview",
     "predeploy": "npm run build",
